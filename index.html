@@ -385,15 +385,16 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
       <div class="field">
         <label>تاريخ إعداد التقرير <span class="req">*</span></label>
         <div class="date-group">
+           </select>
+          <input type="number" id="date-day" placeholder="اليوم" min="1" max="31">
           <select id="date-month">
             <option value="">الشهر</option>
             <option>يناير</option><option>فبراير</option><option>مارس</option>
             <option>إبريل</option><option>مايو</option><option>يونيو</option>
             <option>يوليو</option><option>أغسطس</option><option>سبتمبر</option>
             <option>أكتوبر</option><option>نوفمبر</option><option>ديسمبر</option>
-          </select>
-          <input type="number" id="date-day" placeholder="اليوم" min="1" max="31">
-          <input type="number" id="date-year" placeholder="السنة" min="2020" max="2099">
+         
+          <input type="number" id="date-year" placeholder="السنة" min="2026" max="2030">
         </div>
         <div class="error-msg" id="date-err">الرجاء إدخال التاريخ كاملاً</div>
       </div>
