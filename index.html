@@ -273,7 +273,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   font-size:13px;color:var(--green);line-height:1.7;
 }
 </style>
-<script src="./index_files/html2pdf.bundle.min.js.تنزيل"></script>
+<script src="./index_files/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
@@ -734,6 +734,7 @@ function send(){
     '📚 المادة: ' + data.subject + '<br>' +
     '📅 الشهر: ' + data.reportMonth + '<br>' +
     '⏱ الساعات: ' + data.hours + '<br><br>' +
+    'أعد تحديث الصفحة إذا كنت تريد تعبئة نموذج آخر';
     '📌 يمكنك حفظ نسخة PDF بالضغط على الزر أدناه.';
 
   // إرسال للـ Google Sheets بطريقة no-cors
@@ -830,6 +831,21 @@ function printReport(){
   html2pdf().set(opt).from(el).save().then(function(){
     document.body.removeChild(el);
   });
+  function printReport() {
+  // نحدد القسم الذي نريد تحويله إلى PDF
+  var element = document.querySelector('.main');
+
+  var opt = {
+    margin:       0.5,
+    filename:     'تقرير_إنجاز_شهري.pdf',
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { scale: 2 },
+    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+  };
+
+  // استدعاء المكتبة لإنشاء وحفظ PDF
+  html2pdf().set(opt).from(element).save();
+}
 }
 </script>
 
