@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0043)file:///C:/Users/Hp/Downloads/index_10.html -->
+<!-- saved from url=(0043)file:///C:/Users/Hp/Downloads/index_11.html -->
 <html lang="ar" dir="rtl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -620,9 +620,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
       <div class="suc-icon">✓</div>
       <h2 class="suc-title">تم إرسال التقرير بنجاح!</h2>
       <p class="suc-sub">شكراً لتوثيق تقرير الإنجاز الشهري. سيتم مراجعة التقرير من قِبل الفريق المختص في HEAL Palestine.</p>
-      <div class="suc-note" id="suc-summary"></div>
-      <button class="btn btn-next" style="margin:1.2rem auto;display:flex" onclick="printReport()">🖨️ احفظ نسخة PDF</button>
-      <p style="font-size:12px;color:var(--muted);margin-top:.5rem">سيفتح نافذة الطباعة — اختر "حفظ كـ PDF"</p>
+      <div class="suc-note">📌 للإرسال مرة أخرى يمكنك إعادة تحميل الصفحة.</div>
     </div>
   </div>
 
@@ -740,151 +738,6 @@ function send(){
     + '?data=' + encodeURIComponent(JSON.stringify(data));
   var img = new Image();
   img.src = url;
-}
-function printReport(){
-  var d = window._reportData || {};
-  var stars = function(n){ return '★'.repeat(parseInt(n)||0)+'☆'.repeat(5-(parseInt(n)||0)); };
-  var wrap = function(label,val){
-    return '<div style="margin-bottom:9px"><div style="font-size:10px;color:#888;margin-bottom:3px">'+label+'</div>'
-          +'<div style="background:#fff;border:1px solid #dde3ec;border-radius:4px;padding:7px 10px;font-size:11.5px;line-height:1.7;white-space:pre-wrap">'+val+'</div></div>';
-  };
-  var html =
-    '<div style="font-family:Arial,sans-serif;direction:rtl;color:#1a2530;padding:26px;font-size:12px">'
-    +'<div style="text-align:center;margin-bottom:16px;padding-bottom:12px;border-bottom:3px solid #0f3c5e">'
-    +'<div style="font-size:20px;font-weight:bold;color:#0f3c5e;margin-bottom:3px">HEAL Palestine</div>'
-    +'<div style="font-size:9px;color:#888;letter-spacing:1px">Health · Education · Aid · Leadership</div>'
-    +'<div style="font-size:14px;font-weight:bold;color:#1a6e3c;margin-top:8px">تقرير إنجاز شهري</div>'
-    +'</div>'
-
-    +'<div style="background:#e8f4fd;border-right:4px solid #0f3c5e;padding:9px 12px;border-radius:5px;margin-bottom:10px">'
-    +'<div style="font-size:10.5px;font-weight:bold;color:#0f3c5e;margin-bottom:6px">📅 معلومات التقرير</div>'
-    +'<span style="color:#888;font-size:10px">تاريخ الإعداد: </span><strong>'+d.date+'</strong>'
-    +'&nbsp;&nbsp;&nbsp;<span style="color:#888;font-size:10px">الشهر: </span><strong>'+d.reportMonth+'</strong>'
-    +'&nbsp;&nbsp;&nbsp;<span style="color:#888;font-size:10px">الساعات: </span><strong>'+d.hours+' ساعة</strong>'
-    +'</div>'
-
-    +'<div style="background:#f5f8fc;border-right:4px solid #0f3c5e;padding:9px 12px;border-radius:5px;margin-bottom:10px">'
-    +'<div style="font-size:10.5px;font-weight:bold;color:#0f3c5e;margin-bottom:6px">👤 معلومات المعلم والطالب</div>'
-    +'<table style="width:100%;border-collapse:collapse;font-size:11px">'
-    +'<tr><td style="padding:3px 6px;width:50%"><span style="color:#888">المعلم/ة: </span><strong>'+d.teacherName+'</strong></td>'
-    +'<td style="padding:3px 6px"><span style="color:#888">البريد: </span><strong>'+d.teacherEmail+'</strong></td></tr>'
-    +'<tr><td style="padding:3px 6px"><span style="color:#888">الطالب/ة: </span><strong>'+d.studentName+'</strong></td>'
-    +'<td style="padding:3px 6px"><span style="color:#888">المادة: </span><strong>'+d.subject+'</strong></td></tr>'
-    +'</table></div>'
-
-    +'<div style="background:#f5f8fc;border-right:4px solid #1a6e3c;padding:9px 12px;border-radius:5px;margin-bottom:10px">'
-    +'<div style="font-size:10.5px;font-weight:bold;color:#1a6e3c;margin-bottom:6px">🎯 المهارات والأداء</div>'
-    +wrap('المهارات المُركَّز عليها', d.skills)
-    +'<div style="margin-bottom:9px"><span style="font-size:10px;color:#888">التقييم العام: </span>'
-    +'<span style="color:#c8962a;font-size:15px">'+stars(d.skillsRating)+'</span>'
-    +'<span style="font-size:11px"> ('+d.skillsRating+'/5)</span></div>'
-    +wrap('ملاحظات الأداء', d.skillsNotes)
-    +wrap('آليات التقييم', d.evalMethods)
-    +'</div>'
-
-    +'<div style="background:#f5f8fc;border-right:4px solid #c8962a;padding:9px 12px;border-radius:5px;margin-bottom:10px">'
-    +'<div style="font-size:10.5px;font-weight:bold;color:#c8962a;margin-bottom:6px">⭐ تقييمات الالتزام والمتابعة</div>'
-    +'<table style="width:100%;border-collapse:collapse;font-size:11px">'
-    +'<tr style="background:#fff8ec"><td style="padding:5px 7px;border:1px solid #e8d5b0">الالتزام في المواعيد</td><td style="padding:5px 7px;border:1px solid #e8d5b0;color:#c8962a">'+stars(d.commitSessions)+'</td><td style="padding:5px 7px;border:1px solid #e8d5b0">'+d.commitSessions+'/5</td></tr>'
-    +'<tr><td style="padding:5px 7px;border:1px solid #e8d5b0">الالتزام في الواجبات</td><td style="padding:5px 7px;border:1px solid #e8d5b0;color:#c8962a">'+stars(d.commitTasks)+'</td><td style="padding:5px 7px;border:1px solid #e8d5b0">'+d.commitTasks+'/5</td></tr>'
-    +'<tr style="background:#fff8ec"><td style="padding:5px 7px;border:1px solid #e8d5b0">الالتزام في القواعد</td><td style="padding:5px 7px;border:1px solid #e8d5b0;color:#c8962a">'+stars(d.commitRules)+'</td><td style="padding:5px 7px;border:1px solid #e8d5b0">'+d.commitRules+'/5</td></tr>'
-    +'<tr><td style="padding:5px 7px;border:1px solid #e8d5b0">متابعة الأهل للعملية</td><td style="padding:5px 7px;border:1px solid #e8d5b0;color:#c8962a">'+stars(d.parentFollow)+'</td><td style="padding:5px 7px;border:1px solid #e8d5b0">'+d.parentFollow+'/5</td></tr>'
-    +'<tr style="background:#fff8ec"><td style="padding:5px 7px;border:1px solid #e8d5b0">تواصل الأهل مع المعلم</td><td style="padding:5px 7px;border:1px solid #e8d5b0;color:#c8962a">'+stars(d.parentComm)+'</td><td style="padding:5px 7px;border:1px solid #e8d5b0">'+d.parentComm+'/5</td></tr>'
-    +'</table></div>'
-
-    +'<div style="background:#f5f8fc;border-right:4px solid #8e44ad;padding:9px 12px;border-radius:5px;margin-bottom:10px">'
-    +'<div style="font-size:10.5px;font-weight:bold;color:#8e44ad;margin-bottom:6px">🔮 التحديات والخطط المستقبلية</div>'
-    +wrap('التحديات', d.challenges)
-    +wrap('الحلول والمقترحات', d.solutions)
-    +wrap('مهارات الشهر القادم', d.nextSkills)
-    +(d.extraNotes ? wrap('ملاحظات إضافية', d.extraNotes) : '')
-    +'</div>'
-
-    +'<div style="text-align:center;font-size:9.5px;color:#aaa;margin-top:16px;padding-top:8px;border-top:1px solid #eee">'
-    +'HEAL Palestine &nbsp;|&nbsp; '+d.teacherName+' &nbsp;|&nbsp; '+d.studentName+' &nbsp;|&nbsp; '+d.reportMonth
-    +'</div></div>';
-
-  var el = document.createElement('div');
-  el.innerHTML = html;
-  el.style.position = 'absolute';
-  el.style.left = '-9999px';
-  var w = window.open('','_blank','width=800,height=900');
-  w.document.write('<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"/><title>'
-    +d.teacherName+' - '+d.studentName+' - '+d.reportMonth+'</title>'
-    +'<style>'
-    +'*{box-sizing:border-box;margin:0;padding:0}'
-    +'body{font-family:Arial,sans-serif;color:#1a2530;padding:24px;font-size:12px}'
-    +'.logo{text-align:center;margin-bottom:14px;padding-bottom:12px;border-bottom:3px solid #0f3c5e}'
-    +'.logo h1{font-size:19px;font-weight:bold;color:#0f3c5e;margin-bottom:3px}'
-    +'.logo p{font-size:9px;color:#888;letter-spacing:1px}'
-    +'.logo h2{font-size:13px;font-weight:bold;color:#1a6e3c;margin-top:7px}'
-    +'.sec{border-right:4px solid #0f3c5e;background:#f5f8fc;padding:8px 12px;border-radius:5px;margin-bottom:9px}'
-    +'.sec.green{border-color:#1a6e3c}.sec.gold{border-color:#c8962a}.sec.purple{border-color:#8e44ad}'
-    +'.sec-title{font-size:10px;font-weight:bold;color:#0f3c5e;margin-bottom:7px}'
-    +'.sec.green .sec-title{color:#1a6e3c}.sec.gold .sec-title{color:#c8962a}.sec.purple .sec-title{color:#8e44ad}'
-    +'.row{display:flex;gap:16px;margin-bottom:5px;flex-wrap:wrap}'
-    +'.cell{flex:1;min-width:140px}'
-    +'.lbl{font-size:9.5px;color:#888;margin-bottom:2px}'
-    +'.val{font-size:11.5px;font-weight:600}'
-    +'.box{background:#fff;border:1px solid #dde3ec;border-radius:4px;padding:6px 9px;font-size:11px;line-height:1.7;white-space:pre-wrap;margin-top:3px}'
-    +'.stars{color:#c8962a;font-size:13px}'
-    +'table{width:100%;border-collapse:collapse;font-size:10.5px}'
-    +'td{padding:5px 7px;border:1px solid #e0e0e0}'
-    +'tr:nth-child(odd){background:#fafafa}'
-    +'.footer{text-align:center;font-size:9px;color:#aaa;margin-top:14px;padding-top:8px;border-top:1px solid #eee}'
-    +'@media print{body{padding:12px}button{display:none!important}}'
-    +'</style></head><body>'
-    +'<button onclick="window.print()" style="position:fixed;top:12px;left:12px;background:#1a6e3c;color:#fff;border:none;padding:9px 20px;border-radius:7px;font-size:13px;cursor:pointer;z-index:999">⬇️ حفظ PDF</button>'
-    +'<div class="logo"><h1>HEAL Palestine</h1><p>Health · Education · Aid · Leadership</p><h2>تقرير إنجاز شهري</h2></div>'
-
-    +'<div class="sec">'
-    +'<div class="sec-title">📅 معلومات التقرير</div>'
-    +'<div class="row">'
-    +'<div class="cell"><div class="lbl">تاريخ الإعداد</div><div class="val">'+d.date+'</div></div>'
-    +'<div class="cell"><div class="lbl">فترة التقرير</div><div class="val">'+d.reportMonth+'</div></div>'
-    +'<div class="cell"><div class="lbl">عدد الساعات</div><div class="val">'+d.hours+' ساعة</div></div>'
-    +'</div></div>'
-
-    +'<div class="sec">'
-    +'<div class="sec-title">👤 معلومات المعلم والطالب</div>'
-    +'<div class="row">'
-    +'<div class="cell"><div class="lbl">اسم المعلم/ة</div><div class="val">'+d.teacherName+'</div></div>'
-    +'<div class="cell"><div class="lbl">البريد الإلكتروني</div><div class="val">'+d.teacherEmail+'</div></div>'
-    +'</div>'
-    +'<div class="row">'
-    +'<div class="cell"><div class="lbl">اسم الطالب/ة</div><div class="val">'+d.studentName+'</div></div>'
-    +'<div class="cell"><div class="lbl">المادة</div><div class="val">'+d.subject+'</div></div>'
-    +'</div></div>'
-
-    +'<div class="sec green">'
-    +'<div class="sec-title">🎯 المهارات والأداء</div>'
-    +'<div class="lbl">المهارات المُركَّز عليها</div><div class="box">'+d.skills+'</div>'
-    +'<div style="margin:7px 0"><span class="lbl">التقييم العام: </span><span class="stars">'+stars(d.skillsRating)+'</span><span style="font-size:10px"> ('+d.skillsRating+'/5)</span></div>'
-    +'<div class="lbl">ملاحظات الأداء</div><div class="box">'+d.skillsNotes+'</div>'
-    +'<div style="margin-top:7px"><div class="lbl">آليات التقييم</div><div class="box">'+d.evalMethods+'</div></div>'
-    +'</div>'
-
-    +'<div class="sec gold">'
-    +'<div class="sec-title">⭐ تقييمات الالتزام ومتابعة الأهل</div>'
-    +'<table>'
-    +'<tr><td>الالتزام في المواعيد</td><td class="stars">'+stars(d.commitSessions)+'</td><td>'+d.commitSessions+'/5</td></tr>'
-    +'<tr><td>الالتزام في الواجبات</td><td class="stars">'+stars(d.commitTasks)+'</td><td>'+d.commitTasks+'/5</td></tr>'
-    +'<tr><td>الالتزام في القواعد</td><td class="stars">'+stars(d.commitRules)+'</td><td>'+d.commitRules+'/5</td></tr>'
-    +'<tr><td>متابعة الأهل للعملية</td><td class="stars">'+stars(d.parentFollow)+'</td><td>'+d.parentFollow+'/5</td></tr>'
-    +'<tr><td>تواصل الأهل مع المعلم</td><td class="stars">'+stars(d.parentComm)+'</td><td>'+d.parentComm+'/5</td></tr>'
-    +'</table></div>'
-
-    +'<div class="sec purple">'
-    +'<div class="sec-title">🔮 التحديات والخطط المستقبلية</div>'
-    +'<div class="lbl">التحديات</div><div class="box">'+d.challenges+'</div>'
-    +'<div style="margin-top:7px"><div class="lbl">الحلول والمقترحات</div><div class="box">'+d.solutions+'</div></div>'
-    +'<div style="margin-top:7px"><div class="lbl">مهارات الشهر القادم</div><div class="box">'+d.nextSkills+'</div></div>'
-    +(d.extraNotes?'<div style="margin-top:7px"><div class="lbl">ملاحظات إضافية</div><div class="box">'+d.extraNotes+'</div></div>':'')
-    +'</div>'
-
-    +'<div class="footer">HEAL Palestine | '+d.teacherName+' | '+d.studentName+' | '+d.reportMonth+'</div>'
-    +'</body></html>');
-  w.document.close();
 }
 </script>
 
