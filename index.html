@@ -641,12 +641,14 @@ function toggleOther(cb){
   document.getElementById('other-wrap').style.display = cb.checked ? 'block' : 'none';
   if(!cb.checked) document.getElementById('other-text').value = '';
 }
+
 function se(id,s){
   var e=document.getElementById(id);
   if(!e)return;
   var f=e.closest('.field');
   if(f){s?f.classList.add('has-err'):f.classList.remove('has-err')}
 }
+
 function next(){
   var ok=true;
   if(!document.getElementById('d-day').value||!document.getElementById('d-month').value||!document.getElementById('d-year').value){se('date-err',true);ok=false}else{se('date-err',false)}
@@ -658,6 +660,7 @@ function next(){
   if(!document.getElementById('r-month').value){se('r-month-err',true);ok=false}else{se('r-month-err',false)}
   if(!document.getElementById('hours').value){se('hours-err',true);ok=false}else{se('hours-err',false)}
   if(!ok){window.scrollTo(0,0);return}
+
   document.getElementById('p1').style.display='none';
   document.getElementById('p2').style.display='block';
   document.getElementById('p2').className='pg';
@@ -669,6 +672,7 @@ function next(){
   document.getElementById('s2').classList.add('cur');
   window.scrollTo({top:0,behavior:'smooth'});
 }
+
 function back(){
   document.getElementById('p2').style.display='none';
   document.getElementById('p1').style.display='block';
@@ -681,6 +685,7 @@ function back(){
   document.getElementById('s1').classList.add('cur');
   window.scrollTo({top:0,behavior:'smooth'});
 }
+
 function send(){
   var ok=true;
   if(!document.getElementById('skills').value.trim()){se('skills-err',true);ok=false}else{se('skills-err',false)}
@@ -736,25 +741,19 @@ function send(){
     '👤 المعلم/ة: ' + data.teacherName + '<br>' +
     '🎓 الطالب/ة: ' + data.studentName + '<br>' +
     '📚 المادة: ' + data.subject + '<br>' +
-    '📅 فترة التقرير: ' + data.reportMonth + '<br>' +
-    '⏱ عدد الساعات: ' + data.hours + '<br><br>' +
-    '📌 تم إرسال البيانات وتوليد ملف PDF في مجلد Google Drive الخاص بك تلقائياً.';
+    '📅 الشهر: ' + data.reportMonth + '<br>' +
+    '⏱ الساعات المنجزة: ' + data.hours;
 
-  // إرسال البيانات للـ Apps Script
-  var url = 'https://script.google.com/macros/s/AKfycbwi_JnF449m3E9N_NdbW7zBgk7VgNqlDs_LUoxZgspJev9zL8g1OE6ImjxzK031q7Uh-w/exec';
-
-  fetch(url, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  })
-  .then(function() {
-    console.log('تم إرسال البيانات بنجاح إلى Google Sheets و Drive');
-  })
-  .catch(function(err) {
-    console.error('حدث خطأ أثناء الإرسال:', err);
-  });
+  // إرسال البيانات إلى Google Apps Script
+  var scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL';
+  if (scriptURL !== 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') {
+    fetch(scriptURL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    }).catch(function(err){ console.error('Error:', err); });
+  }
 }
 
 function printReport() {
