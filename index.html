@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!-- saved from url=(0043)file:///C:/Users/Hp/Downloads/index_12.html -->
-<html lang="ar" dir="rtl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
+<html lang="ar" dir="rtl">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HEAL Palestine — تقرير إنجاز شهري</title>
-<link href="./index_files/css2" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -65,7 +65,6 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
   display:flex;align-items:center;justify-content:center;
   font-size:26px;
 }
-.brand-text{}
 .brand-name{
   font-size:20px;font-weight:700;color:#fff;
   letter-spacing:.06em;line-height:1;
@@ -167,8 +166,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .field{margin-bottom:1rem}
 .field:last-child{margin-bottom:0}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem}
-@media(max-width:500px){.row2,.row3{grid-template-columns:1fr}}
+@media(max-width:500px){.row2{grid-template-columns:1fr}}
 label.lbl{
   display:block;font-size:13px;font-weight:600;
   color:var(--text);margin-bottom:5px;line-height:1.5;
@@ -271,6 +269,13 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   background:var(--green-light);border:1px solid rgba(39,174,96,.2);
   border-radius:12px;padding:1rem 1.25rem;margin:1.75rem auto;max-width:400px;
   font-size:13px;color:var(--green);line-height:1.7;
+}
+
+@media print {
+  .hdr, .prog-bar, .btn, .suc-note:last-child { display: none !important; }
+  body { background: #fff; }
+  .main { max-width: 100%; padding: 0; }
+  #suc-summary { border: none !important; padding: 0 !important; }
 }
 </style>
 </head>
@@ -620,6 +625,11 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
       <div class="suc-icon">✓</div>
       <h2 class="suc-title">تم إرسال التقرير بنجاح!</h2>
       <p class="suc-sub">شكراً لتوثيق تقرير الإنجاز الشهري. سيتم مراجعة التقرير من قِبل الفريق المختص في HEAL Palestine.</p>
+      
+      <div id="suc-summary" class="suc-note" style="text-align: right; background: #fff; border: 1.5px solid var(--border); color: var(--text);"></div>
+      
+      <button class="btn btn-next" onclick="printReport()" style="margin: 0 auto 1.5rem;">🖨️ طباعة أو حفظ التقرير PDF</button>
+
       <div class="suc-note">📌 للإرسال مرة أخرى يمكنك إعادة تحميل الصفحة.</div>
     </div>
   </div>
@@ -684,7 +694,6 @@ function send(){
   if(!document.getElementById('next-skills').value.trim()){se('ns-err',true);ok=false}else{se('ns-err',false)}
   if(!ok){window.scrollTo({top:0,behavior:'smooth'});return}
 
-  // جمع البيانات
   var methods = [];
   document.querySelectorAll('.em:checked').forEach(function(c){
     if(c.value==='أخرى'){
@@ -716,30 +725,41 @@ function send(){
     extraNotes:     document.getElementById('extra').value
   };
 
-  // إظهار شاشة النجاح
+  // إظهار شاشة النجاح والملخص
   document.getElementById('p2').style.display='none';
   document.querySelector('.prog-bar').style.display='none';
   document.getElementById('done').style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
 
-  // ملخص للعرض وللطباعة
-  window._reportData = data;
   document.getElementById('suc-summary').innerHTML =
-    '📋 <strong>ملخص التقرير</strong><br><br>' +
+    '📋 <strong>ملخص التقرير المُرْسَل</strong><br><br>' +
     '👤 المعلم/ة: ' + data.teacherName + '<br>' +
     '🎓 الطالب/ة: ' + data.studentName + '<br>' +
     '📚 المادة: ' + data.subject + '<br>' +
-    '📅 الشهر: ' + data.reportMonth + '<br>' +
-    '⏱ الساعات: ' + data.hours + '<br><br>' +
-    '📌 يمكنك حفظ نسخة PDF بالضغط على الزر أدناه.';
+    '📅 فترة التقرير: ' + data.reportMonth + '<br>' +
+    '⏱ عدد الساعات: ' + data.hours + '<br><br>' +
+    '📌 تم إرسال البيانات وتوليد ملف PDF في مجلد Google Drive الخاص بك تلقائياً.';
 
-  // إرسال للـ Google Sheets بطريقة موثوقة
-  var url = 'https://script.google.com/macros/s/AKfycbzRxgubWljAL9_k4Y2GhMwNHr3NOdlWruiySqYo4B_uIxopaS45_rE2F15Kly0BsJxQ2Q/exec'
-    + '?data=' + encodeURIComponent(JSON.stringify(data));
-  var img = new Image();
-  img.src = url;
+  // إرسال البيانات للـ Apps Script
+  var url = 'https://script.google.com/macros/s/AKfycbwi_JnF449m3E9N_NdbW7zBgk7VgNqlDs_LUoxZgspJev9zL8g1OE6ImjxzK031q7Uh-w/exec';
+
+  fetch(url, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  .then(function() {
+    console.log('تم إرسال البيانات بنجاح إلى Google Sheets و Drive');
+  })
+  .catch(function(err) {
+    console.error('حدث خطأ أثناء الإرسال:', err);
+  });
+}
+
+function printReport() {
+  window.print();
 }
 </script>
-
-
-</body></html>
+</body>
+</html>
