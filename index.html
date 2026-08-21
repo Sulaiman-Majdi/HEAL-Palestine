@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!-- saved from url=(0043)file:///C:/Users/Hp/Downloads/index_14.html -->
+<html lang="ar" dir="rtl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HEAL Palestine — تقرير إنجاز شهري</title>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="file:///C:/Users/Hp/Downloads/index_files/css2" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -65,6 +65,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
   display:flex;align-items:center;justify-content:center;
   font-size:26px;
 }
+.brand-text{}
 .brand-name{
   font-size:20px;font-weight:700;color:#fff;
   letter-spacing:.06em;line-height:1;
@@ -166,7 +167,8 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 .field{margin-bottom:1rem}
 .field:last-child{margin-bottom:0}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-@media(max-width:500px){.row2{grid-template-columns:1fr}}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem}
+@media(max-width:500px){.row2,.row3{grid-template-columns:1fr}}
 label.lbl{
   display:block;font-size:13px;font-weight:600;
   color:var(--text);margin-bottom:5px;line-height:1.5;
@@ -254,6 +256,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   box-shadow:0 3px 10px rgba(26,110,60,.25);
 }
 .btn-send:hover{transform:translateY(-1px);box-shadow:0 5px 16px rgba(26,110,60,.35)}
+.btn-send:disabled{opacity:.6;cursor:not-allowed;transform:none!important}
 
 /* ═══ SUCCESS ═══ */
 .success{text-align:center;padding:4rem 1.5rem;animation:pgIn .4s ease}
@@ -267,15 +270,13 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 .suc-sub{font-size:14px;color:var(--muted);line-height:1.7;max-width:380px;margin:0 auto}
 .suc-note{
   background:var(--green-light);border:1px solid rgba(39,174,96,.2);
-  border-radius:12px;padding:1rem 1.25rem;margin:1.75rem auto;max-width:400px;
-  font-size:13px;color:var(--green);line-height:1.7;
+  border-radius:12px;padding:1rem 1.25rem;margin:1.75rem auto;max-width:420px;
+  font-size:13px;color:var(--green);line-height:1.9;text-align:right;
 }
-
-@media print {
-  .hdr, .prog-bar, .btn, .suc-note:last-child { display: none !important; }
-  body { background: #fff; }
-  .main { max-width: 100%; padding: 0; }
-  #suc-summary { border: none !important; padding: 0 !important; }
+.suc-fail{
+  background:#fdecea;border:1px solid rgba(192,57,43,.25);
+  border-radius:12px;padding:1rem 1.25rem;margin:1.75rem auto;max-width:420px;
+  font-size:13px;color:var(--red);line-height:1.8;text-align:right;display:none;
 }
 </style>
 </head>
@@ -615,7 +616,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 
     <div class="btn-row">
       <button class="btn btn-back" onclick="back()">→ رجوع</button>
-      <button class="btn btn-send" onclick="send()">✓ إرسال التقرير</button>
+      <button class="btn btn-send" id="send-btn" onclick="send()">✓ إرسال التقرير</button>
     </div>
   </div><!-- /p2 -->
 
@@ -625,30 +626,27 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
       <div class="suc-icon">✓</div>
       <h2 class="suc-title">تم إرسال التقرير بنجاح!</h2>
       <p class="suc-sub">شكراً لتوثيق تقرير الإنجاز الشهري. سيتم مراجعة التقرير من قِبل الفريق المختص في HEAL Palestine.</p>
-      
-      <div id="suc-summary" class="suc-note" style="text-align: right; background: #fff; border: 1.5px solid var(--border); color: var(--text);"></div>
-      
-      <button class="btn btn-next" onclick="printReport()" style="margin: 0 auto 1.5rem;">🖨️ طباعة أو حفظ التقرير PDF</button>
-
-      <div class="suc-note">📌 للإرسال مرة أخرى يمكنك إعادة تحميل الصفحة.</div>
+      <div class="suc-note" id="suc-summary"></div>
+      <div class="suc-fail" id="suc-fail">⚠️ تعذّر تأكيد الإرسال إلى الخادم. إذا استمرت المشكلة، تواصل مع مسؤول النظام وأرفق لقطة شاشة.</div>
     </div>
   </div>
 
 </div><!-- /main -->
 
 <script>
+// ⚠️ ضع هنا رابط نشر Google Apps Script (Web App) الخاص بك
+var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzRxgubWljAL9_k4Y2GhMwNHr3NOdlWruiySqYo4B_uIxopaS45_rE2F15Kly0BsJxQ2Q/exec';
+
 function toggleOther(cb){
   document.getElementById('other-wrap').style.display = cb.checked ? 'block' : 'none';
   if(!cb.checked) document.getElementById('other-text').value = '';
 }
-
 function se(id,s){
   var e=document.getElementById(id);
   if(!e)return;
   var f=e.closest('.field');
   if(f){s?f.classList.add('has-err'):f.classList.remove('has-err')}
 }
-
 function next(){
   var ok=true;
   if(!document.getElementById('d-day').value||!document.getElementById('d-month').value||!document.getElementById('d-year').value){se('date-err',true);ok=false}else{se('date-err',false)}
@@ -660,7 +658,6 @@ function next(){
   if(!document.getElementById('r-month').value){se('r-month-err',true);ok=false}else{se('r-month-err',false)}
   if(!document.getElementById('hours').value){se('hours-err',true);ok=false}else{se('hours-err',false)}
   if(!ok){window.scrollTo(0,0);return}
-
   document.getElementById('p1').style.display='none';
   document.getElementById('p2').style.display='block';
   document.getElementById('p2').className='pg';
@@ -672,7 +669,6 @@ function next(){
   document.getElementById('s2').classList.add('cur');
   window.scrollTo({top:0,behavior:'smooth'});
 }
-
 function back(){
   document.getElementById('p2').style.display='none';
   document.getElementById('p1').style.display='block';
@@ -685,7 +681,6 @@ function back(){
   document.getElementById('s1').classList.add('cur');
   window.scrollTo({top:0,behavior:'smooth'});
 }
-
 function send(){
   var ok=true;
   if(!document.getElementById('skills').value.trim()){se('skills-err',true);ok=false}else{se('skills-err',false)}
@@ -699,6 +694,7 @@ function send(){
   if(!document.getElementById('next-skills').value.trim()){se('ns-err',true);ok=false}else{se('ns-err',false)}
   if(!ok){window.scrollTo({top:0,behavior:'smooth'});return}
 
+  // جمع البيانات
   var methods = [];
   document.querySelectorAll('.em:checked').forEach(function(c){
     if(c.value==='أخرى'){
@@ -730,35 +726,46 @@ function send(){
     extraNotes:     document.getElementById('extra').value
   };
 
-  // إظهار شاشة النجاح والملخص
+  var btn = document.getElementById('send-btn');
+  btn.disabled = true;
+  btn.textContent = 'جارِ الإرسال...';
+
+  // إرسال البيانات عبر POST (بدل GET/Image) حتى لا تُقتطع الحقول الطويلة
+  // ملاحظة: نستخدم Content-Type: text/plain عمداً لتفادي CORS preflight
+  // الذي لا يدعمه Google Apps Script بشكل افتراضي.
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(data)
+  })
+  .then(function(res){ return res.json().catch(function(){ return {result:'ok'}; }); })
+  .then(function(res){
+    showSuccess(data, true);
+  })
+  .catch(function(err){
+    console.error('Submit error:', err);
+    showSuccess(data, false);
+  });
+}
+
+function showSuccess(data, sentOk){
   document.getElementById('p2').style.display='none';
   document.querySelector('.prog-bar').style.display='none';
   document.getElementById('done').style.display='block';
   window.scrollTo({top:0,behavior:'smooth'});
 
   document.getElementById('suc-summary').innerHTML =
-    '📋 <strong>ملخص التقرير المُرْسَل</strong><br><br>' +
+    '📋 <strong>ملخص التقرير</strong><br><br>' +
     '👤 المعلم/ة: ' + data.teacherName + '<br>' +
     '🎓 الطالب/ة: ' + data.studentName + '<br>' +
     '📚 المادة: ' + data.subject + '<br>' +
     '📅 الشهر: ' + data.reportMonth + '<br>' +
-    '⏱ الساعات المنجزة: ' + data.hours;
+    '⏱ الساعات: ' + data.hours;
 
-  // إرسال البيانات إلى Google Apps Script
-  var scriptURL = 'https://script.google.com/macros/s/AKfycbwKlKPhkiSEzfFaJSWSmfc9Xf1o2UMCbTjwwpWPmTa3k-vJEIzrlTJj9jxDvEOVh2bw/exec';
-  if (scriptURL !== 'https://script.google.com/macros/s/AKfycbwKlKPhkiSEzfFaJSWSmfc9Xf1o2UMCbTjwwpWPmTa3k-vJEIzrlTJj9jxDvEOVh2bw/exec') {
-    fetch(scriptURL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    }).catch(function(err){ console.error('Error:', err); });
-  }
-}
-
-function printReport() {
-  window.print();
+  document.getElementById('suc-fail').style.display = sentOk ? 'none' : 'block';
 }
 </script>
-</body>
-</html>
+
+
+
+</body></html>
