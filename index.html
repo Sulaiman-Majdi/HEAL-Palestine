@@ -745,8 +745,8 @@ function send(){
     '⏱ الساعات المنجزة: ' + data.hours;
 
   // إرسال البيانات إلى Google Apps Script
-  var scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL';
-  if (scriptURL !== 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') {
+  var scriptURL = 'https://script.google.com/macros/s/AKfycbwi_JnF449m3E9N_NdbW7zBgk7VgNqIDs_LUoxZgspJev9zL8g1OE6ImjxzK031q7Uh-w/exec';
+  if (scriptURL !== 'https://script.google.com/macros/s/AKfycbwi_JnF449m3E9N_NdbW7zBgk7VgNqIDs_LUoxZgspJev9zL8g1OE6ImjxzK031q7Uh-w/exec') {
     fetch(scriptURL, {
       method: 'POST',
       mode: 'no-cors',
