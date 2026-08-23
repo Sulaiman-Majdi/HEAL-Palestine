@@ -281,21 +281,29 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 /* ═══ TIMER ═══ */
 .timer-bar{
   background:linear-gradient(135deg,var(--gold),#e0ab3d);
-  padding:.7rem 1.5rem;
+  padding:.9rem 1.5rem;
   text-align:center;
 }
 .timer-inner{
   max-width:740px;margin:0 auto;
-  display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
+  display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;
 }
-.timer-icon{font-size:16px}
 .timer-text{font-size:13px;color:#fff;font-weight:600}
-.timer-count{
-  font-size:15px;font-weight:700;color:#fff;
-  background:rgba(255,255,255,.18);
-  border-radius:8px;padding:3px 12px;
-  letter-spacing:.03em;font-variant-numeric:tabular-nums;
+.timer-boxes{display:flex;align-items:center;gap:8px}
+.timer-box{
+  background:rgba(255,255,255,.22);
+  border:1px solid rgba(255,255,255,.35);
+  border-radius:10px;
+  min-width:52px;
+  padding:6px 4px 5px;
+  text-align:center;
 }
+.timer-num{
+  display:block;font-size:19px;font-weight:700;color:#fff;
+  font-variant-numeric:tabular-nums;line-height:1.1;
+}
+.timer-lbl{display:block;font-size:9.5px;color:rgba(255,255,255,.85);margin-top:2px}
+.timer-sep{color:#fff;font-weight:700;font-size:16px}
 
 /* ═══ CLOSED SCREEN ═══ */
 .closed-icon{
@@ -338,9 +346,16 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 <!-- ═══ TIMER ═══ -->
 <div class="timer-bar" id="timer-bar">
   <div class="timer-inner">
-    <span class="timer-icon">🕒</span>
-    <span class="timer-text">الوقت المتبقي لإرسال التقارير:</span>
-    <span class="timer-count" id="timer-count">—</span>
+    <span class="timer-text">⏳ الوقت المتبقي لإرسال التقارير</span>
+    <div class="timer-boxes" dir="ltr">
+      <div class="timer-box"><span class="timer-num" id="t-days">--</span><span class="timer-lbl">يوم</span></div>
+      <span class="timer-sep">:</span>
+      <div class="timer-box"><span class="timer-num" id="t-hours">--</span><span class="timer-lbl">ساعة</span></div>
+      <span class="timer-sep">:</span>
+      <div class="timer-box"><span class="timer-num" id="t-mins">--</span><span class="timer-lbl">دقيقة</span></div>
+      <span class="timer-sep">:</span>
+      <div class="timer-box"><span class="timer-num" id="t-secs">--</span><span class="timer-lbl">ثانية</span></div>
+    </div>
   </div>
 </div>
 
@@ -694,13 +709,22 @@ var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxyDlZ0xtkpyHEQrqISn8M
         'open'   -> افتح النموذج دائمًا مهما كان التاريخ
         'closed' -> أغلق النموذج دائمًا مهما كان التاريخ
    عدّل القيمتين دول وقت ما تحب، النموذج هياخدهم على طول من غير أي تعديل تاني. */
-var DEADLINE = new Date('2026-08-22T23:59:59+03:00');
+var DEADLINE = new Date('2026-08-30T23:59:59+03:00');
 var FORCE_STATE = 'auto';
 /* ============================================================ */
 
 var timerInterval = null;
 
 function pad2_(n){ return n < 10 ? '0' + n : '' + n; }
+
+function hide_(sel){
+  var el = (sel[0] === '#') ? document.getElementById(sel.slice(1)) : document.querySelector(sel);
+  if (el) el.style.display = 'none';
+}
+function show_(sel, disp){
+  var el = (sel[0] === '#') ? document.getElementById(sel.slice(1)) : document.querySelector(sel);
+  if (el) el.style.display = disp || 'block';
+}
 
 function getFormState_(){
   if (FORCE_STATE === 'open') return 'open';
@@ -709,22 +733,29 @@ function getFormState_(){
 }
 
 function showClosedScreen_(){
-  if (timerInterval) clearInterval(timerInterval);
-  document.getElementById('timer-bar').style.display = 'none';
-  document.querySelector('.prog-bar').style.display = 'none';
-  document.querySelector('.main').style.display = 'none';
-  document.getElementById('closed-screen').style.display = 'block';
+  if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+  hide_('#timer-bar');
+  hide_('.prog-bar');
+  hide_('.main');
+  show_('#closed-screen', 'block');
 }
 
 function updateTimer_(){
+  if (getFormState_() === 'closed') { showClosedScreen_(); return; }
   var diff = DEADLINE - new Date();
   if (diff <= 0) { showClosedScreen_(); return; }
-  var d = Math.floor(diff / (1000 * 60 * 60 * 24));
-  var h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-  var m = Math.floor((diff / (1000 * 60)) % 60);
+  var d = Math.floor(diff / 86400000);
+  var h = Math.floor((diff / 3600000) % 24);
+  var m = Math.floor((diff / 60000) % 60);
   var s = Math.floor((diff / 1000) % 60);
-  var text = (d > 0 ? d + '  يوم  ' : '') + pad2_(h) + ':' + pad2_(m) + ':' + pad2_(s);
-  document.getElementById('timer-count').textContent = text;
+  var dEl = document.getElementById('t-days');
+  var hEl = document.getElementById('t-hours');
+  var mEl = document.getElementById('t-mins');
+  var sEl = document.getElementById('t-secs');
+  if (dEl) dEl.textContent = pad2_(d);
+  if (hEl) hEl.textContent = pad2_(h);
+  if (mEl) mEl.textContent = pad2_(m);
+  if (sEl) sEl.textContent = pad2_(s);
 }
 
 function initFormAvailability_(){
@@ -734,7 +765,7 @@ function initFormAvailability_(){
     return;
   }
   if (FORCE_STATE === 'open') {
-    document.getElementById('timer-bar').style.display = 'none';
+    hide_('#timer-bar');
     return;
   }
   updateTimer_();
@@ -788,6 +819,11 @@ function back(){
   window.scrollTo({top:0,behavior:'smooth'});
 }
 function send(){
+  if (getFormState_() === 'closed') {
+    showClosedScreen_();
+    alert('عذرًا، انتهى وقت إرسال التقارير.');
+    return;
+  }
   var ok=true;
   if(!document.getElementById('skills').value.trim()){se('skills-err',true);ok=false}else{se('skills-err',false)}
   if(!document.getElementById('s-notes').value.trim()){se('s-notes-err',true);ok=false}else{se('s-notes-err',false)}
