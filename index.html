@@ -277,6 +277,33 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   border-radius:12px;padding:1rem 1.25rem;margin:1.75rem auto;max-width:420px;
   font-size:13px;color:var(--red);line-height:1.8;text-align:right;display:none;
 }
+
+/* ═══ TIMER ═══ */
+.timer-bar{
+  background:linear-gradient(135deg,var(--gold),#e0ab3d);
+  padding:.7rem 1.5rem;
+  text-align:center;
+}
+.timer-inner{
+  max-width:740px;margin:0 auto;
+  display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
+}
+.timer-icon{font-size:16px}
+.timer-text{font-size:13px;color:#fff;font-weight:600}
+.timer-count{
+  font-size:15px;font-weight:700;color:#fff;
+  background:rgba(255,255,255,.18);
+  border-radius:8px;padding:3px 12px;
+  letter-spacing:.03em;font-variant-numeric:tabular-nums;
+}
+
+/* ═══ CLOSED SCREEN ═══ */
+.closed-icon{
+  width:84px;height:84px;margin:0 auto 1.5rem;
+  background:linear-gradient(135deg,var(--red),#e0574a);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:38px;color:#fff;box-shadow:0 8px 28px rgba(192,57,43,.3);
+}
 </style>
 </head>
 <body>
@@ -307,6 +334,26 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   </div>
   <div class="hdr-wave"></div>
 </header>
+
+<!-- ═══ TIMER ═══ -->
+<div class="timer-bar" id="timer-bar">
+  <div class="timer-inner">
+    <span class="timer-icon">🕒</span>
+    <span class="timer-text">الوقت المتبقي لإرسال التقارير:</span>
+    <span class="timer-count" id="timer-count">—</span>
+  </div>
+</div>
+
+<!-- ═══ CLOSED SCREEN ═══ -->
+<div id="closed-screen" style="display:none">
+  <div class="main">
+    <div class="success">
+      <div class="closed-icon">⏰</div>
+      <h2 class="suc-title">انتهى وقت إرسال التقارير</h2>
+      <p class="suc-sub">تم إغلاق نموذج التقرير الشهري لهذه الفترة. لمزيد من الاستفسارات، تواصل مع الفريق المختص في HEAL Palestine.</p>
+    </div>
+  </div>
+</div>
 
 <!-- ═══ PROGRESS ═══ -->
 <div class="prog-bar">
@@ -636,6 +683,65 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 <script>
 // ⚠️ ضع هنا رابط نشر Google Apps Script (Web App) الخاص بك
 var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxyDlZ0xtkpyHEQrqISn8MpyL81Z0wndjMtapqVSSaJzMK_tvHgo99L73VGdt1uzC0F/exec';
+
+/* ============== إعدادات مهلة استقبال التقارير ==============
+   1) DEADLINE: التاريخ والوقت اللي هيقفل عنده النموذج تلقائيًا.
+      الصيغة: 'YYYY-MM-DDTHH:mm:ss' + فرق التوقيت (+03:00 لتوقيت القاهرة).
+      مثال: نهاية يوم 30 أغسطس 2026 بتوقيت القاهرة:
+      'YYYY-MM-DDTHH:mm:ss+03:00' -> '2026-08-30T23:59:59+03:00'
+   2) FORCE_STATE: تحكم يدوي كامل منك في أي وقت، بغض النظر عن DEADLINE:
+        'auto'   -> يعتمد على DEADLINE (الوضع الافتراضي)
+        'open'   -> افتح النموذج دائمًا مهما كان التاريخ
+        'closed' -> أغلق النموذج دائمًا مهما كان التاريخ
+   عدّل القيمتين دول وقت ما تحب، النموذج هياخدهم على طول من غير أي تعديل تاني. */
+var DEADLINE = new Date('2026-08-30T23:59:59+03:00');
+var FORCE_STATE = 'closed';
+/* ============================================================ */
+
+var timerInterval = null;
+
+function pad2_(n){ return n < 10 ? '0' + n : '' + n; }
+
+function getFormState_(){
+  if (FORCE_STATE === 'open') return 'open';
+  if (FORCE_STATE === 'closed') return 'closed';
+  return (new Date() < DEADLINE) ? 'open' : 'closed';
+}
+
+function showClosedScreen_(){
+  if (timerInterval) clearInterval(timerInterval);
+  document.getElementById('timer-bar').style.display = 'none';
+  document.querySelector('.prog-bar').style.display = 'none';
+  document.querySelector('.main').style.display = 'none';
+  document.getElementById('closed-screen').style.display = 'block';
+}
+
+function updateTimer_(){
+  var diff = DEADLINE - new Date();
+  if (diff <= 0) { showClosedScreen_(); return; }
+  var d = Math.floor(diff / (1000 * 60 * 60 * 24));
+  var h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  var m = Math.floor((diff / (1000 * 60)) % 60);
+  var s = Math.floor((diff / 1000) % 60);
+  var text = (d > 0 ? d + ' يوم  ' : '') + pad2_(h) + ':' + pad2_(m) + ':' + pad2_(s);
+  document.getElementById('timer-count').textContent = text;
+}
+
+function initFormAvailability_(){
+  var state = getFormState_();
+  if (state === 'closed') {
+    showClosedScreen_();
+    return;
+  }
+  if (FORCE_STATE === 'open') {
+    document.getElementById('timer-bar').style.display = 'none';
+    return;
+  }
+  updateTimer_();
+  timerInterval = setInterval(updateTimer_, 1000);
+}
+
+document.addEventListener('DOMContentLoaded', initFormAvailability_);
 
 function toggleOther(cb){
   document.getElementById('other-wrap').style.display = cb.checked ? 'block' : 'none';
