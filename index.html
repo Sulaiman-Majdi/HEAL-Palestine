@@ -130,6 +130,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
 
 /* ═══ MAIN ═══ */
 .main{max-width:740px;margin:0 auto;padding:1.75rem 1.5rem 5rem}
+.closed-wrap{max-width:740px;margin:0 auto;padding:1.75rem 1.5rem 5rem}
 
 /* ═══ PAGE ANIM ═══ */
 .pg{animation:pgIn .3s ease}
@@ -361,7 +362,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 
 <!-- ═══ CLOSED SCREEN ═══ -->
 <div id="closed-screen" style="display:none">
-  <div class="main">
+  <div class="closed-wrap">
     <div class="success">
       <div class="closed-icon">⏰</div>
       <h2 class="suc-title">انتهى وقت إرسال التقارير</h2>
@@ -392,7 +393,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 </div>
 
 <!-- ═══ MAIN ═══ -->
-<div class="main">
+<div class="main" id="page-content">
 
   <!-- ── PAGE 1 ── -->
   <div id="p1" class="pg">
@@ -710,7 +711,7 @@ var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxyDlZ0xtkpyHEQrqISn8M
         'closed' -> أغلق النموذج دائمًا مهما كان التاريخ
    عدّل القيمتين دول وقت ما تحب، النموذج هياخدهم على طول من غير أي تعديل تاني. */
 var DEADLINE = new Date('2026-08-30T23:59:59+03:00');
-var FORCE_STATE = 'closed';
+var FORCE_STATE = 'auto';
 /* ============================================================ */
 
 var timerInterval = null;
@@ -736,7 +737,7 @@ function showClosedScreen_(){
   if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
   hide_('#timer-bar');
   hide_('.prog-bar');
-  hide_('.main');
+  hide_('#page-content');
   show_('#closed-screen', 'block');
 }
 
