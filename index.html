@@ -723,7 +723,7 @@ function updateTimer_(){
   var h = Math.floor((diff / (1000 * 60 * 60)) % 24);
   var m = Math.floor((diff / (1000 * 60)) % 60);
   var s = Math.floor((diff / 1000) % 60);
-  var text = (d > 0 ? d + ' يوم  ' : '') + pad2_(h) + ':' + pad2_(m) + ':' + pad2_(s);
+  var text = (d > 0 ? d + ' يوم و  ' : '') + pad2_(h) + ':' + pad2_(m) + ':' + pad2_(s);
   document.getElementById('timer-count').textContent = text;
 }
 
