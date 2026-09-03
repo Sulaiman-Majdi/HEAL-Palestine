@@ -158,9 +158,13 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
   font-size:15px;flex-shrink:0;
 }
 .card-head-icon.person-icon{
-  background:var(--blue-light);
-  border:1px solid var(--border);
-  font-size:20px;
+  background:var(--blue);
+  border:none;
+  font-size:0;
+}
+.person-icon svg{
+  width:20px;height:20px;
+  fill:var(--blue-light);
 }
 .card-head-title{
   font-size:14px;font-weight:700;
@@ -438,7 +442,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 
     <div class="card">
       <div class="card-head">
-        <div class="card-head-icon person-icon">👤</div>
+        <div class="card-head-icon person-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="img"><circle cx="12" cy="8" r="3.2"></circle><path d="M5 21c0-4.2 3.1-7.2 7-7.2s7 3 7 7.2H5z"></path></svg></div>
         <span class="card-head-title">معلومات المعلم والطالب</span>
       </div>
       <div class="card-body">
