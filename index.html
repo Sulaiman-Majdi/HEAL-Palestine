@@ -157,15 +157,6 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min
   display:flex;align-items:center;justify-content:center;
   font-size:15px;flex-shrink:0;
 }
-.card-head-icon.person-icon{
-  background:var(--blue);
-  border:none;
-  font-size:0;
-}
-.person-icon svg{
-  width:20px;height:20px;
-  fill:var(--blue-light);
-}
 .card-head-title{
   font-size:14px;font-weight:700;
   color:var(--blue);letter-spacing:0;
@@ -356,7 +347,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 <!-- ═══ TIMER ═══ -->
 <div class="timer-bar" id="timer-bar">
   <div class="timer-inner">
-    <span class="timer-text">⏳ الوقت المتبقي لإنهاء إرسال التقارير</span>
+    <span class="timer-text">⏳ الوقت المتبقي لإرسال التقارير</span>
     <div class="timer-boxes" dir="ltr">
       <div class="timer-box"><span class="timer-num" id="t-days">--</span><span class="timer-lbl">يوم</span></div>
       <span class="timer-sep">:</span>
@@ -442,15 +433,15 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 
     <div class="card">
       <div class="card-head">
-        <div class="card-head-icon person-icon" aria-hidden="true"><svg viewBox="0 0 24 24" role="img"><circle cx="12" cy="8" r="3.2"></circle><path d="M5 21c0-4.2 3.1-7.2 7-7.2s7 3 7 7.2H5z"></path></svg></div>
+        <div class="card-head-icon">👤</div>
         <span class="card-head-title">معلومات المعلم والطالب</span>
       </div>
       <div class="card-body">
         <div class="row2">
           <div class="field">
             <label class="lbl">اسم المعلم/ة <span class="req">*</span></label>
-            <select id="t-name">
-              <option value="">اختر اسم المعلم/ة...</option>
+            <input type="text" id="t-name" list="teacher-list" placeholder="اكتب أول حرف من اسم المعلم/ة للبحث..." autocomplete="off">
+            <datalist id="teacher-list">
               <option>أسماء أبو شرخ</option>
               <option>إحسان السقا</option>
               <option>إيناس فياض</option>
@@ -470,7 +461,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
               <option>مريم طبش</option>
               <option>هبة شراب</option>
               <option>هناء الطباع</option>
-            </select>
+            </datalist>
             <div class="err" id="t-name-err">هذا الحقل مطلوب</div>
           </div>
           <div class="field">
@@ -482,7 +473,73 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
         <div class="row2">
           <div class="field">
             <label class="lbl">اسم الطالب/ة <span class="req">*</span></label>
-            <input type="text" id="s-name" placeholder="اسم الطالب">
+            <input type="text" id="s-name" list="student-list" placeholder="اكتب أول حرف من اسم الطالب/ة للبحث..." autocomplete="off">
+            <!-- 👇 ضيف اسم كل طالب/ة كسطر <option>الاسم</option> هنا -->
+            <datalist id="student-list">
+              <option>أحمد أبو عبيدة</option>
+              <option>أحمد الفيراني</option>
+              <option>آية الفيراني</option>
+              <option>أميرة الأخرس</option>
+              <option>آمنة حسن سيد القايض</option>
+              <option>إسلام الفيراني</option>
+              <option>إلياس أبو سلطان</option>
+              <option>إيمان عزام</option>
+              <option>براء أنس عاطف أبو طاهر</option>
+              <option>تالا المدهون</option>
+              <option>تالين أبو سلطان</option>
+              <option>حمزة أسامة أبو عواد</option>
+              <option>حمزة عماد أبو خاطر</option>
+              <option>خالد أبو سلطان</option>
+              <option>خديجة بارود</option>
+              <option>خليل أبو شعبان</option>
+              <option>ديما الأخرس</option>
+              <option>ديما قديح</option>
+              <option>ضحى جباليه</option>
+              <option>رهف أسامة أبو عواد</option>
+              <option>رهف الدرعيني</option>
+              <option>رفيف الدريني</option>
+              <option>رحاب أحمد الدلو</option>
+              <option>روزان عرفات</option>
+              <option>ساهر إبراهيم قهوجي</option>
+              <option>سلمان نصر</option>
+              <option>سراج حسن سيد القايض</option>
+              <option>سيف حسن سيد القايض</option>
+              <option>شيرين جباليه</option>
+              <option>غادة العديني</option>
+              <option>غسان شادي العديني</option>
+              <option>غزل حسن سيد القايض</option>
+              <option>غزل العديني</option>
+              <option>قمر فاروق الكردي</option>
+              <option>قيصر نديم عوكل</option>
+              <option>لانا محمد أحمد</option>
+              <option>ليان حميدان</option>
+              <option>مالك بارود</option>
+              <option>ملاك بارود</option>
+              <option>ملاك الشرفا</option>
+              <option>محمد البريعي</option>
+              <option>محمد الجملي</option>
+              <option>محمد الفيراني</option>
+              <option>محمد عزام</option>
+              <option>محمد عيد</option>
+              <option>محمد عماد</option>
+              <option>مصطفى نصر</option>
+              <option>معاذ عبدالعال</option>
+              <option>عمار العديني</option>
+              <option>عُمر عزام</option>
+              <option>نور عمار</option>
+              <option>نور الفيراني</option>
+              <option>نرمين عرفات</option>
+              <option>هادي زقوت</option>
+              <option>هبة رأفت أبو عبيدة</option>
+              <option>همام الفيراني</option>
+              <option>وحيد الغلبان</option>
+              <option>وسام شقورة</option>
+              <option>وسيم محمد</option>
+              <option>وردة حمادين</option>
+              <option>يزن فتحي أبو دلال</option>
+              <option>عبد الرحمن الفيراني</option>
+              <option>حبيبة خضير</option>
+            </datalist>
             <div class="err" id="s-name-err">هذا الحقل مطلوب</div>
           </div>
           <div class="field">
@@ -719,7 +776,7 @@ var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxyDlZ0xtkpyHEQrqISn8M
         'open'   -> افتح النموذج دائمًا مهما كان التاريخ
         'closed' -> أغلق النموذج دائمًا مهما كان التاريخ
    عدّل القيمتين دول وقت ما تحب، النموذج هياخدهم على طول من غير أي تعديل تاني. */
-var DEADLINE = new Date('2026-09-15T06:12:49+03:00');
+var DEADLINE = new Date('2026-08-30T23:59:59+03:00');
 var FORCE_STATE = 'auto';
 /* ============================================================ */
 
