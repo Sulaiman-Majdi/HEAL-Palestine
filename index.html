@@ -462,7 +462,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
               <option>هبة شراب</option>
               <option>هناء الطباع</option>
             </datalist>
-            <div class="err" id="t-name-err">هذا الحقل مطلوب</div>
+            <div class="err" id="t-name-err">الرجاء اختيار اسم من القائمة</div>
           </div>
           <div class="field">
             <label class="lbl">البريد الإلكتروني <span class="req">*</span></label>
@@ -540,7 +540,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
               <option>عبد الرحمن الفيراني</option>
               <option>حبيبة خضير</option>
             </datalist>
-            <div class="err" id="s-name-err">هذا الحقل مطلوب</div>
+            <div class="err" id="s-name-err">الرجاء اختيار اسم من القائمة</div>
           </div>
           <div class="field">
             <label class="lbl">المادة <span class="req">*</span></label>
@@ -851,13 +851,23 @@ function se(id,s){
   var f=e.closest('.field');
   if(f){s?f.classList.add('has-err'):f.classList.remove('has-err')}
 }
+function isInList_(inputId, datalistId){
+  var val = document.getElementById(inputId).value.trim();
+  if (!val) return false;
+  var options = document.querySelectorAll('#' + datalistId + ' option');
+  for (var i = 0; i < options.length; i++) {
+    if (options[i].value.trim() === val) return true;
+  }
+  return false;
+}
+
 function next(){
   var ok=true;
   if(!document.getElementById('d-day').value||!document.getElementById('d-month').value||!document.getElementById('d-year').value){se('date-err',true);ok=false}else{se('date-err',false)}
-  if(!document.getElementById('t-name').value){se('t-name-err',true);ok=false}else{se('t-name-err',false)}
+  if(!isInList_('t-name','teacher-list')){se('t-name-err',true);ok=false}else{se('t-name-err',false)}
   var em=document.getElementById('t-email').value.trim();
   if(!em||!em.includes('@')){se('t-email-err',true);ok=false}else{se('t-email-err',false)}
-  if(!document.getElementById('s-name').value.trim()){se('s-name-err',true);ok=false}else{se('s-name-err',false)}
+  if(!isInList_('s-name','student-list')){se('s-name-err',true);ok=false}else{se('s-name-err',false)}
   if(!document.getElementById('subject').value){se('subject-err',true);ok=false}else{se('subject-err',false)}
   if(!document.getElementById('r-month').value){se('r-month-err',true);ok=false}else{se('r-month-err',false)}
   if(!document.getElementById('hours').value){se('hours-err',true);ok=false}else{se('hours-err',false)}
