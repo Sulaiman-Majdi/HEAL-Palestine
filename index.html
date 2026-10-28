@@ -422,7 +422,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
               <div class="date-lbl-small">الشهر</div>
             </div>
             <div>
-              <input type="number" id="d-year" placeholder="السنة" min="2020" max="2099">
+              <input type="number" id="d-year" placeholder="السنة" min="2026" max="2030">
               <div class="date-lbl-small">السنة</div>
             </div>
           </div>
@@ -895,6 +895,7 @@ function next(){
   var monthValue = document.getElementById('d-month').value;
   var yearValue = document.getElementById('d-year').value;
   var dayNumber = parseInt(dayValue, 10);
+  var yearNumber = parseInt(yearValue, 10);
   var maxDays = daysInSelectedMonth_();
   var dateError = document.getElementById('date-err');
   if(!dayValue || !monthValue || !yearValue){
@@ -902,6 +903,9 @@ function next(){
     se('date-err',true);ok=false;
   }else if(!/^\d+$/.test(dayValue) || dayNumber < 1 || dayNumber > maxDays){
     dateError.textContent = 'اليوم غير صحيح لهذا الشهر؛ الحد الأقصى هو ' + maxDays;
+    se('date-err',true);ok=false;
+  }else if(!/^\d+$/.test(yearValue) || yearNumber < 2026 || yearNumber > 2030){
+    dateError.textContent = 'السنة يجب أن تكون بين 2026 و2030';
     se('date-err',true);ok=false;
   }else{
     se('date-err',false);
