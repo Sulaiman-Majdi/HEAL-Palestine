@@ -408,7 +408,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
           <label class="lbl">التاريخ <span class="req">*</span></label>
           <div class="date-trio">
             <div>
-              <input type="number" id="d-day" placeholder="اليوم" min="1" max="31">
+              <input type="text" id="d-day" placeholder="اليوم" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off">
               <div class="date-lbl-small">اليوم</div>
             </div>
             <div>
@@ -841,6 +841,34 @@ function initFormAvailability_(){
 
 document.addEventListener('DOMContentLoaded', initFormAvailability_);
 
+function daysInSelectedMonth_(){
+  var month = document.getElementById('d-month').value;
+  var year = parseInt(document.getElementById('d-year').value, 10);
+  var monthDays = {
+    'يناير':31, 'فبراير':(year && year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0) ? 29 : 28),
+    'مارس':31, 'إبريل':30, 'مايو':31, 'يونيو':30,
+    'يوليو':31, 'أغسطس':31, 'سبتمبر':30, 'أكتوبر':31,
+    'نوفمبر':30, 'ديسمبر':31
+  };
+  return monthDays[month] || 31;
+}
+function updateDayLimit_(){
+  var day = document.getElementById('d-day');
+  if (day) day.max = daysInSelectedMonth_();
+}
+function keepDateDigits_(e){
+  e.target.value = e.target.value.replace(/\D/g, '').slice(0, 2);
+}
+document.addEventListener('DOMContentLoaded', function(){
+  var day = document.getElementById('d-day');
+  var month = document.getElementById('d-month');
+  var year = document.getElementById('d-year');
+  if (day) day.addEventListener('input', keepDateDigits_);
+  if (month) month.addEventListener('change', updateDayLimit_);
+  if (year) year.addEventListener('input', updateDayLimit_);
+  updateDayLimit_();
+});
+
 function toggleOther(cb){
   document.getElementById('other-wrap').style.display = cb.checked ? 'block' : 'none';
   if(!cb.checked) document.getElementById('other-text').value = '';
@@ -863,7 +891,21 @@ function isInList_(inputId, datalistId){
 
 function next(){
   var ok=true;
-  if(!document.getElementById('d-day').value||!document.getElementById('d-month').value||!document.getElementById('d-year').value){se('date-err',true);ok=false}else{se('date-err',false)}
+  var dayValue = document.getElementById('d-day').value;
+  var monthValue = document.getElementById('d-month').value;
+  var yearValue = document.getElementById('d-year').value;
+  var dayNumber = parseInt(dayValue, 10);
+  var maxDays = daysInSelectedMonth_();
+  var dateError = document.getElementById('date-err');
+  if(!dayValue || !monthValue || !yearValue){
+    dateError.textContent = 'الرجاء إدخال التاريخ كاملاً';
+    se('date-err',true);ok=false;
+  }else if(!/^\d+$/.test(dayValue) || dayNumber < 1 || dayNumber > maxDays){
+    dateError.textContent = 'اليوم غير صحيح لهذا الشهر؛ الحد الأقصى هو ' + maxDays;
+    se('date-err',true);ok=false;
+  }else{
+    se('date-err',false);
+  }
   if(!isInList_('t-name','teacher-list')){se('t-name-err',true);ok=false}else{se('t-name-err',false)}
   var em=document.getElementById('t-email').value.trim();
   if(!em||!em.includes('@')){se('t-email-err',true);ok=false}else{se('t-email-err',false)}
